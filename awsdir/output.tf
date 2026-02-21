@@ -20,4 +20,8 @@ output "key_pair_name" {
 output "route_table_id" {
  value = aws_route_table.awsrt.id
 }
- 
+output "instance_public_ip" {
+ value = aws_instance.web_server[*].public_ip
+}
+
+
