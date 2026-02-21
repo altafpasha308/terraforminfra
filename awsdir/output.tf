@@ -1,0 +1,23 @@
+output "vpc_id" {
+ value = aws_vpc.vpc.id
+}
+output "public_subnet_ids" {
+ value = [aws_subnet.public_1.id, aws_subnet.public_2.id]
+}
+output "private_subnet_ids" {
+ value = [aws_subnet.private_1.id, aws_subnet.private_2.id]
+}
+output "internet_gateway_id" {
+ value = aws_internet_gateway.igw.id
+}
+
+output "security_group_id" {
+  value       = aws_security_group.web_access.id
+}
+output "key_pair_name" {
+ value = aws_key_pair.deployer.key_name
+}
+output "route_table_id" {
+ value = aws_route_table.awsrt.id
+}
+ 
