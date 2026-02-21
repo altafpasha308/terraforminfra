@@ -1,0 +1,29 @@
+resource "azurerm_linux_virtual_machine" "web_vm" {
+  count               = 2
+  name                = "ubuntu-web-${count.index}"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
+  size                = "Standard_B1s" # Free tier / Cheap eligible
+  admin_username      = "azureuser"
+
+  network_interface_ids = [
+    azurerm_network_interface.web_nic[count.index].id,
+  ]
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
+    version   = "latest"
+  }
+}
