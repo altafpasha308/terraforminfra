@@ -77,3 +77,30 @@ resource "azurerm_subnet_network_security_group_association" "pub_2_assoc" {
   subnet_id                 = azurerm_subnet.public_2.id
   network_security_group_id = azurerm_network_security_group.web_nsg.id
 }
+
+# Create Public IP Addresses
+resource "azurerm_public_ip" "web_pip" {
+  count               = 2
+  name                = "web-pip-${count.index}"
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
+  allocation_method   = "Static"
+  sku                 = "Standard" # Matches the Modern Azure VM requirements
+}
+
+# Create Network Interfaces (NICs)
+resource "azurerm_network_interface" "web_nic" {
+  count               = 2
+  name                = "web-nic-${count.index}"
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+
+  ip_configuration {
+    name                          = "internal"
+    # Switches between public_1 and public_2 subnets
+    subnet_id                     = count.index == 0 ? azurerm_subnet.public_1.id : azurerm_subnet.public_2.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.web_pip[count.index].id
+  }
+}
+
