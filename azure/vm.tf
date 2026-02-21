@@ -3,7 +3,7 @@ resource "azurerm_linux_virtual_machine" "web_vm" {
   name                = "ubuntu-web-${count.index}"
   resource_group_name = azurerm_resource_group.resource_group.name
   location            = azurerm_resource_group.resource_group.location
-  size                = "Standard_B1s" # Free tier / Cheap eligible
+  size                = "Standard_B2als_v2" # Free tier / Cheap eligible
   admin_username      = "azureuser"
 
   network_interface_ids = [
